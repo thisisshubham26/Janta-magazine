@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article — Janta Magazine</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <h1 class="logo">
+        <img src="logo.png" alt="Logo" />
+        <span>Janta Magazine</span>
+    </h1>
+    <div>
+      <a href="index.html">Home</a>
+      <!-- <a href="login.html">Login</a>
+      <a href="signup.html">Register</a> -->
+    </div>
+  </nav>
+
+  <main>
+    <section id="articleContent">
+      <h2 id="articleTitle"></h2>
+      <p id="articleBody"></p>
+      <p><strong>Category:</strong> <span id="articleCategory"></span></p>
+      <p><strong>Author:</strong> <span id="articleAuthor"></span></p>
+    </section>
+
+    <section id="likesSection">
+      <button id="likeBtn">👍 Like</button>
+      <span id="likeCount">0</span> likes
+    </section>
+
+    <section id="commentsSection">
+      <h3>Comments</h3>
+      <ul id="commentsList"></ul>
+
+      <form id="commentForm">
+        <textarea id="commentText" required placeholder="Write a comment..."></textarea>
+        <button type="submit">Post Comment</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Janta Magazine. All rights reserved.</p>
+  </footer>
+
+  <script src="js/article.js" defer></script>
+</body>
+</html>

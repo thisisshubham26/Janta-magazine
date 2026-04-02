@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login — Janta Magazine</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <h1 class="logo">
+        <img src="logo.png" alt="Logo" />
+        <span>Janta Magazine</span>
+    </h1>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="signup.html">Sign up</a>
+    </div>
+  </nav>
+
+  <main>
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="Email" required>
+      <input id="password" type="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Janta Magazine. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    //   e.preventDefault();
+
+    //   // Always point to backend port 5000
+    //   const API = "http://localhost:5000/api";
+
+    //   const email = document.getElementById("email").value.trim();
+    //   const password = document.getElementById("password").value;
+
+    //   try {
+    //     const res = await fetch(API + "/login", {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ email, password })
+    //     });
+
+    //     if (res.ok) {
+    //       const user = await res.json();
+    //       // Save user info in localStorage
+    //       localStorage.setItem("jm_userId", user._id);
+    //       localStorage.setItem("jm_role", user.role);
+    //       alert("Login successful!");
+
+    //       // Redirect based on role
+    //       if (user.role === "writer") {
+    //         window.location.href = "dashboard.html";
+    //       } else {
+    //         window.location.href = "index.html";
+    //       }
+    //     } else {
+    //       alert("Invalid credentials");
+    //     }
+    //   } catch (err) {
+    //     alert("Error connecting to server");
+    //   }
+    // });
+
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const API = "https://janta-mag.onrender.com/api";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  try {
+    const res = await fetch(API + "/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (res.ok) {
+      const data = await res.json(); // { token: "..." }
+      const token = data.token;
+
+      // Save JWT in localStorage
+      localStorage.setItem("jm_token", token);
+
+      // Decode JWT payload (base64 decode)
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userName = payload.name;
+      const userRole = payload.role;
+
+      alert(`Login successful! Welcome ${userName}`);
+
+      // Redirect based on role
+      if (userRole === "writer") {
+        window.location.href = "dashboard.html";
+      } else {
+        window.location.href = "index.html";
+      }
+    } else {
+      alert("Invalid credentials");
+    }
+  } catch (err) {
+    alert("Error connecting to server");
+  }
+});
+
+
+  </script>
+</body>
+</html>

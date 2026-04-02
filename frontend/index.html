@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Janta Magazine</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <nav>
+      <h1 class="logo">
+        <img src="logo.png" alt="Logo" />
+        <span>Janta Magazine</span>
+      </h1>
+      <div>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Register</a>
+      </div>
+    </nav>
+
+    <section id="welcome">
+      <h2>Welcome to Janta Magazine</h2>
+      <p>Voice of the People - Read, Write and Share Ideas</p>
+    </section>
+
+    <section class="articles">
+      <h2>Latest Articles</h2>
+      <div id="articlesList"></div>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 Janta Magazine. All rights reserved.</p>
+    </footer>
+
+    <script src="js/articles.js" defer></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navbarDiv = document.querySelector("nav div");
+        const token = localStorage.getItem("jm_token");
+
+        if (token) {
+          try {
+            // Decode JWT payload
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            const userName = payload.name;
+            const userRole = payload.role;
+
+            // Replace login/register links with welcome + logout
+            navbarDiv.innerHTML = `
+          <span>Welcome, ${userName} (${userRole})</span>
+          <button id="logoutBtn">Logout</button>
+        `;
+
+            // Logout clears token
+            document
+              .getElementById("logoutBtn")
+              .addEventListener("click", () => {
+                localStorage.removeItem("jm_token");
+                window.location.href = "index.html";
+              });
+          } catch (err) {
+            console.error("Invalid token", err);
+            // fallback to login/register
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
+
+

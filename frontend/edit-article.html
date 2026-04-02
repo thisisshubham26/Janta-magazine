@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Article — Janta Magazine</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <h1 class="logo">
+        <img src="logo.png" alt="Logo" />
+        <span>Janta Magazine</span>
+    </h1>
+    <div>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="index.html">Home</a>
+    </div>
+  </nav>
+
+  <main>
+    <h2>Edit Article</h2>
+    <form id="editForm">
+      <label for="title">Title</label>
+      <input id="title" type="text" required>
+
+      <label for="content">Content</label>
+      <textarea id="content" required></textarea>
+
+      <label for="category">Category</label>
+      <input id="category" type="text">
+
+      <button type="submit">Save Changes</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Janta Magazine. All rights reserved.</p>
+  </footer>
+
+  <!-- <script>
+    const API = "http://localhost:5000/api"; // always point to backend
+    const params = new URLSearchParams(window.location.search);
+    const articleId = params.get("id"); // article ID from query string
+
+    // Load article details into form
+    async function loadArticle() {
+      try {
+        const res = await fetch(`${API}/articles/${articleId}`);
+        if (!res.ok) throw new Error("Failed to fetch article");
+        const article = await res.json();
+
+        document.getElementById("title").value = article.title || "";
+        document.getElementById("content").value = article.content || "";
+        document.getElementById("category").value = article.category || "";
+      } catch (err) {
+        console.error("Error loading article:", err);
+        alert("Could not load article details.");
+      }
+    }
+
+    // Handle form submission
+    document.getElementById("editForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("title").value.trim();
+      const content = document.getElementById("content").value.trim();
+      const category = document.getElementById("category").value.trim();
+
+      try {
+        const res = await fetch(`${API}/articles/${articleId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, content, category })
+        });
+
+        if (res.ok) {
+          alert("Article updated successfully!");
+          window.location.href = "dashboard.html";
+        } else {
+          const errData = await res.json();
+          alert("Failed to update article: " + (errData.error || res.statusText));
+        }
+      } catch (err) {
+        console.error("Error updating article:", err);
+        alert("Error connecting to server");
+      }
+    });
+
+    // Load article when page opens
+    loadArticle();
+  </script> -->
+
+<script>
+  const API = "https://janta-mag.onrender.com/api" 
+  const params = new URLSearchParams(window.location.search);
+  const articleId = params.get("id"); 
+  const token = localStorage.getItem("jm_token");
+
+  if (!token) {
+    alert("You must be logged in to edit articles.");
+    window.location.href = "login.html";
+  }
+
+  // Decode JWT payload
+  let payload;
+  try {
+    payload = JSON.parse(atob(token.split('.')[1]));
+  } catch (err) {
+    alert("Invalid login session. Please log in again.");
+    window.location.href = "login.html";
+  }
+
+  // Load article details into form
+  async function loadArticle() {
+    try {
+      const res = await fetch(`${API}/articles/${articleId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error("Failed to fetch article");
+      const article = await res.json();
+
+      // Optional: check ownership
+      if (String(article.author?._id) !== String(payload.id)) {
+        alert("You can only edit your own articles.");
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      document.getElementById("title").value = article.title || "";
+      document.getElementById("content").value = article.content || "";
+      document.getElementById("category").value = article.category || "";
+    } catch (err) {
+      console.error("Error loading article:", err);
+      alert("Could not load article details.");
+    }
+  }
+
+  // Handle form submission
+  document.getElementById("editForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const title = document.getElementById("title").value.trim();
+    const content = document.getElementById("content").value.trim();
+    const category = document.getElementById("category").value.trim();
+
+    try {
+      const res = await fetch(`${API}/articles/${articleId}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ title, content, category })
+      });
+
+      if (res.ok) {
+        alert("Article updated successfully!");
+        window.location.href = "dashboard.html";
+      } else {
+        const errData = await res.json();
+        alert("Failed to update article: " + (errData.error || res.statusText));
+      }
+    } catch (err) {
+      console.error("Error updating article:", err);
+      alert("Error connecting to server");
+    }
+  });
+
+  // Load article when page opens
+  loadArticle();
+</script>
+
+
+
+</body>
+</html>

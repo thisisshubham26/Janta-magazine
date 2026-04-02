@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Create Article — Janta Magazine</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <h1 class="logo">
+        <img src="logo.png" alt="Logo" />
+        <span>Janta Magazine</span>
+    </h1>
+    <div>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="index.html">Home</a>
+    </div>
+  </nav>
+
+  <main>
+    <form id="articleForm">
+      <input id="title" type="text" placeholder="Title" required>
+      <textarea id="content" placeholder="Content" required></textarea>
+      <input id="category" type="text" placeholder="Category">
+      <button type="submit">Publish</button>
+    </form>
+  </main>
+
+  <!-- <script>
+    document.getElementById("articleForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const API = "http://localhost:5000/api";
+
+      const title = document.getElementById("title").value.trim();
+      const content = document.getElementById("content").value.trim();
+      const category = document.getElementById("category").value.trim();
+      const author = localStorage.getItem("jm_userId");
+
+      try {
+        const res = await fetch(API + "/articles", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, content, category, author })
+        });
+
+        if (res.ok) {
+          alert("Article added successfully!");
+          window.location.href = "dashboard.html";
+        } else {
+          alert("Failed to add article");
+        }
+      } catch {
+        alert("Error connecting to server");
+      }
+    });
+  </script> -->
+
+
+  <script>
+  document.getElementById("articleForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const API = "https://janta-mag.onrender.com/api";
+
+    const title = document.getElementById("title").value.trim();
+    const content = document.getElementById("content").value.trim();
+    const category = document.getElementById("category").value.trim();
+
+    const token = localStorage.getItem("jm_token");
+    if (!token) {
+      alert("You must be logged in as a writer to publish articles.");
+      return;
+    }
+
+    try {
+      const res = await fetch(API + "/articles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ title, content, category })
+      });
+
+      if (res.ok) {
+        alert("Article added successfully!");
+        window.location.href = "dashboard.html";
+      } else {
+        const errText = await res.text();
+        alert("Failed to add article: " + errText);
+      }
+    } catch {
+      alert("Error connecting to server");
+    }
+  });
+</script>
+
+</body>
+</html>
+
+
+
+
