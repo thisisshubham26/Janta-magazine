@@ -44,7 +44,7 @@
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const API = "https://janta-mag.onrender.com/api";
+  const API = "https://janta-magazine.onrender.com/api";
   const token = localStorage.getItem("jm_token");
   const container = document.getElementById("writerArticles");
 
